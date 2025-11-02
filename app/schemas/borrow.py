@@ -9,6 +9,9 @@ class BorrowBase(BaseModel):
 class Borrow(BorrowBase):
     id: str
     
-class BorrowUpdateRequest(BaseModel):
+class BorrowCreate(BorrowBase):
+    pass
+    
+class BorrowUpdate(BaseModel):
     reader_id: Optional[str] = None
     book_id: Optional[str] = None

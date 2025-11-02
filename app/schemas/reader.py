@@ -14,8 +14,11 @@ class Reader(ReaderBase):
     id: UUID
     class Config:
         orm_mode = True
+        
+class ReaderCreate(ReaderBase):
+    pass
 
-class ReaderUpdateRequest(BaseModel):
+class ReaderUpdate(BaseModel):
     email: Optional[str] = None
     username: Optional[str] = None
     first_name: Optional[str] = None

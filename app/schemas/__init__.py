@@ -1,4 +1,5 @@
-from .book import Book, BookBase, BookCreateRequest, BookUpdateRequest
-from .borrow import Borrow, BorrowBase, BorrowUpdateRequest
-from .category import Category, CategoryBase, CategoryUpdateRequest
-from .reader import Reader, ReaderBase, ReaderUpdateRequest
+from .book import Book, BookBase, BookCreate, BookUpdate
+from .borrow import Borrow, BorrowBase, BorrowCreate, BorrowUpdate
+from .category import Category, CategoryBase, CategoryCreate, CategoryUpdate
+from .reader import Reader, ReaderBase, ReaderCreate, ReaderUpdate
+from .response import ResponseModel

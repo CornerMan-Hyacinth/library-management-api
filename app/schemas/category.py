@@ -9,6 +9,9 @@ class Category(CategoryBase):
     id: UUID
     class Config:
         orm_mode = True
+        
+class CategoryCreate(CategoryBase):
+    pass
     
-class CategoryUpdateRequest(BaseModel):
+class CategoryUpdate(BaseModel):
     name: Optional[str] = None

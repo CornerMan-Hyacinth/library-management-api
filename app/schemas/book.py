@@ -6,6 +6,7 @@ class BookBase(BaseModel):
     title: str
     author: str
     description: Optional[str] = None
+    available: bool
     category_id: str
     
 class Book(BookBase):
@@ -13,10 +14,10 @@ class Book(BookBase):
     class Config:
         orm_mode = True
     
-class BookCreateRequest(BookBase):
+class BookCreate(BookBase):
     pass
 
-class BookUpdateRequest(BaseModel):
+class BookUpdate(BaseModel):
     title: Optional[str] = None
     author: Optional[str] = None
     description: Optional[str] = None
