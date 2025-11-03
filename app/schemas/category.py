@@ -6,9 +6,8 @@ class CategoryBase(BaseModel):
     name: str
     
 class Category(CategoryBase):
-    id: UUID
-    class Config:
-        from_attributes = True
+    id: str
+    model_config = {"from_attributes": True}
         
 class CategoryCreate(CategoryBase):
     pass

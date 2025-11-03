@@ -1,33 +1,38 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from ..models import Borrow
-from ..schemas import BorrowCreate, BorrowUpdate
+from ..schemas import Borrow as BorSchema, BorrowCreate, BorrowUpdate
 from typing import List, Optional
 
-async def create_borrow(db: AsyncSession, borrow: BorrowCreate) -> Borrow:
+async def create_borrow(db: AsyncSession, borrow: BorrowCreate) -> BorSchema:
     new_borrow = Borrow(**borrow.model_dump())
     db.add(new_borrow)
     await db.commit()
     await db.refresh(new_borrow)
-    return new_borrow
+    return BorSchema.model_validate(new_borrow)
 
 async def get_borrows(db: AsyncSession) -> List[Borrow]:
     result = await db.execute(select(Borrow))
-    return result.scalars().all()
+    db_borrows = result.scalars().all()
+    return [BorSchema.model_validate(borrow) for borrow in db_borrows]
 
-async def get_borrow_by_id(db: AsyncSession, borrow_id: str) -> Optional[Borrow]:
+async def get_borrow_by_id(db: AsyncSession, borrow_id: str) -> Optional[BorSchema]:
     result = await db.execute(select(Borrow).where(Borrow.id == borrow_id))
-    return result.scalars().first()
+    return BorSchema.model_validate(result.scalars().first())
 
-async def get_borrows_by_reader(db: AsyncSession, reader_id: str) -> List[Borrow]:
+async def get_borrows_by_reader(db: AsyncSession, reader_id: str) -> List[BorSchema]:
     result = await db.execute(select(Borrow).where(Borrow.reader_id == reader_id))
-    return result.scalars().all()
+    db_borrows = result.scalars().all()
+    return [BorSchema.model_validate(borrow) for borrow in db_borrows]
 
-async def get_borrows_by_book(db: AsyncSession, book_id: str) -> List[Borrow]:
+async def get_borrows_by_book(db: AsyncSession, book_id: str) -> List[BorSchema]:
     result = await db.execute(select(Borrow).where(Borrow.book_id == book_id))
-    return result.scalars().all()
+    db_borrows = result.scalars().all()
+    return [BorSchema.model_validate(borrow) for borrow in db_borrows]
 
-async def update_borrow(db: AsyncSession, borrow_id: str, data: BorrowUpdate) -> Optional[Borrow]:
+async def update_borrow(
+    db: AsyncSession, borrow_id: str, data: BorrowUpdate
+) -> Optional[BorSchema]:
     result = await db.execute(select(Borrow).where(Borrow.id == borrow_id))
     borrow = result.scalars().first()
     if not borrow:
@@ -38,7 +43,7 @@ async def update_borrow(db: AsyncSession, borrow_id: str, data: BorrowUpdate) ->
 
     await db.commit()
     await db.refresh(borrow)
-    return borrow
+    return BorSchema.model_validate(borrow)
 
 async def delete_borrow(db: AsyncSession, borrow_id: str) -> bool:
     result = await db.execute(select(Borrow).where(Borrow.id == borrow_id))

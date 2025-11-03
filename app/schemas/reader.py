@@ -11,9 +11,8 @@ class ReaderBase(BaseModel):
     gender: Gender
     
 class Reader(ReaderBase):
-    id: UUID
-    class Config:
-        from_attributes = True
+    id: str
+    model_config = {"from_attributes": True}
         
 class ReaderCreate(ReaderBase):
     pass

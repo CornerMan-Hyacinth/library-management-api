@@ -10,9 +10,8 @@ class BookBase(BaseModel):
     category_id: str
     
 class Book(BookBase):
-    id: UUID
-    class Config:
-        from_attributes = True
+    id: str
+    model_config = {"from_attributes": True}
     
 class BookCreate(BookBase):
     pass

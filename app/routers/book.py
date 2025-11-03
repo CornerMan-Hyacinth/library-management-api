@@ -4,7 +4,6 @@ from typing import Optional
 from ..schemas import BookCreate, BookUpdate
 from ..crud import book as book_crud, category as cat_crud
 from ..database import get_db
-from ..enums import BookAvailable
 from ..utils.response import success_response, error_response
 
 router = APIRouter(prefix="/books", tags=["Books"])
@@ -47,7 +46,7 @@ async def get_books_by_category(category_name: str, db: AsyncSession = Depends(g
             message="Category not found", status_code=status.HTTP_404_NOT_FOUND
         )
         
-    books = await book_crud.get_book_by_category(db=db, cat_id=cat.id)
+    books = await book_crud.get_books_by_category(db=db, cat_id=cat.id)
     return success_response(data=books, message="Books retrieved by category")
 
 @router.put("/{book_id}")
