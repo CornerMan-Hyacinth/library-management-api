@@ -14,7 +14,7 @@ async def create_borrow(borrow: BorrowCreate, db: AsyncSession = Depends(get_db)
     
     if borrows >= book.quantity:
         return error_response(
-            message=f"All copies of ${book.title} has been borrowed",
+            message=f"All copies of {book.title} has been borrowed",
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT
         )
         
