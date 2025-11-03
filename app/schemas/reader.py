@@ -13,7 +13,7 @@ class ReaderBase(BaseModel):
 class Reader(ReaderBase):
     id: UUID
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 class ReaderCreate(ReaderBase):
     pass

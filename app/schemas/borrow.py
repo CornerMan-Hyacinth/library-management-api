@@ -8,6 +8,8 @@ class BorrowBase(BaseModel):
     
 class Borrow(BorrowBase):
     id: str
+    class Config:
+        from_attributes = True
     
 class BorrowCreate(BorrowBase):
     pass

@@ -5,7 +5,7 @@ from ..database import get_db
 from ..schemas import Borrow, BorrowCreate, BorrowUpdate
 from ..utils.response import success_response, error_response
 
-router = APIRouter(prefix="/borrows")
+router = APIRouter(prefix="/borrows", tags=["Borrows"])
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_borrow(borrow: BorrowCreate, db: AsyncSession = Depends(get_db)):

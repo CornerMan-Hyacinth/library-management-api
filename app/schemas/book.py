@@ -12,7 +12,7 @@ class BookBase(BaseModel):
 class Book(BookBase):
     id: UUID
     class Config:
-        orm_mode = True
+        from_attributes = True
     
 class BookCreate(BookBase):
     pass

@@ -2,6 +2,7 @@ from __future__ import annotations
 from uuid import uuid4
 from sqlalchemy import String, ForeignKey, Boolean, Integer
 from sqlalchemy.orm import relationship, Mapped, mapped_column
+from typing import List
 ## from sqlalchemy.dialects.postgresql import UUID ## for production postgresql
 from ..database import Base
 

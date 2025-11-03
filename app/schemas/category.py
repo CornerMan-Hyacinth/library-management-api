@@ -8,7 +8,7 @@ class CategoryBase(BaseModel):
 class Category(CategoryBase):
     id: UUID
     class Config:
-        orm_mode = True
+        from_attributes = True
         
 class CategoryCreate(CategoryBase):
     pass

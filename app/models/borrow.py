@@ -1,5 +1,5 @@
-from ..database import Base
 from __future__ import annotations
+from ..database import Base
 from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import uuid4

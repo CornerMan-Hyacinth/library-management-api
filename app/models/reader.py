@@ -1,8 +1,9 @@
+from __future__ import annotations
 from ..database import Base
 from ..enums import Gender
-from __future__ import annotations
 from sqlalchemy import String, Enum as SqlEnum
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import List
 from uuid import uuid4
 
 class Reader(Base):

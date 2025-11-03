@@ -5,7 +5,7 @@ from ..crud import category as cat_crud
 from ..database import get_db
 from ..utils.response import success_response, error_response
 
-router = APIRouter(prefix="/categories")
+router = APIRouter(prefix="/categories", tags=["Categories"])
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_category(category: CategoryCreate, db: AsyncSession = Depends(get_db)):
