@@ -19,6 +19,14 @@ async def get_category_by_id(db: AsyncSession, category_id: str) -> Optional[Cat
     result = await db.execute(select(Category).where(Category.id == category_id))
     return result.scalars().first()
 
+async def get_category_by_name(db: AsyncSession, category: str) -> Optional[Category]:
+    result = await db.execute(select(Category).where(Category.name == category))
+    category = result.scalars().first()
+    if not category:
+        return None
+    
+    return category
+
 async def update_category(db: AsyncSession, category_id: str, data: CategoryUpdate) -> Optional[Category]:
     result = await db.execute(select(Category).where(Category.id == category_id))
     category = result.scalars().first()

@@ -19,6 +19,10 @@ async def get_reader_by_id(db: AsyncSession, id: str) -> Optional[Reader]:
     result = await db.execute(select(Reader).where(Reader.id == id))
     return result.scalars().first()
 
+async def get_reader_by_email(db: AsyncSession, email: str) -> Optional[Reader]:
+    result = await db.execute(select(Reader).where(Reader.email == email))
+    return result.scalars().first()
+
 async def update_reader(db: AsyncSession, id: str, data: ReaderUpdate) -> Optional[Reader]:
     result = await db.execute(select(Reader).where(Reader.id == id))
     reader = result.scalars().first()
