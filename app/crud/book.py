@@ -12,15 +12,8 @@ async def create_book(db: AsyncSession, book: BookCreate):
     await db.refresh(new_book)
     return new_book
 
-async def get_books(db: AsyncSession, available: BookAvailable) -> List[Book]:
-    query = select(Book)
-    
-    if available == BookAvailable.available:
-        query = query.where(Book.available == True)
-    elif available == BookAvailable.borrowed:
-        query == query.where(Book.available == False)
-        
-    results = await db.execute(query)      
+async def get_books(db: AsyncSession) -> List[Book]:
+    results = await db.execute(select(Book))      
     return results.scalars().all()
 
 async def get_book_by_id(db: AsyncSession, id: str) -> Optional[Book]:

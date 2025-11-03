@@ -25,11 +25,8 @@ async def create_book(book: BookCreate, db: AsyncSession = Depends(get_db)):
     )
 
 @router.get("/")
-async def get_books(
-    db: AsyncSession = Depends(get_db),
-    available: Optional[BookAvailable] = BookAvailable.all
-):
-    books = await book_crud.get_books(db=db, available=available)
+async def get_books(db: AsyncSession = Depends(get_db)):
+    books = await book_crud.get_books(db=db)
     return success_response(data=books, message="Books retrieved")
 
 @router.get("/{book_id}")
@@ -42,9 +39,9 @@ async def get_book(book_id: str, db: AsyncSession = Depends(get_db)):
     
     return success_response(data=book, message="Book found")
 
-@router.get("/category/{category}")
-async def get_books_by_category(category: str, db: AsyncSession = Depends(get_db)):
-    cat = await cat_crud.get_category_by_name(db=db, category=category)
+@router.get("/category/{category_name}")
+async def get_books_by_category(category_name: str, db: AsyncSession = Depends(get_db)):
+    cat = await cat_crud.get_category_by_name(db=db, category=category_name)
     if not cat:
         return error_response(
             message="Category not found", status_code=status.HTTP_404_NOT_FOUND

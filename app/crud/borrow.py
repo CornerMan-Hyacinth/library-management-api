@@ -19,13 +19,13 @@ async def get_borrow_by_id(db: AsyncSession, borrow_id: str) -> Optional[Borrow]
     result = await db.execute(select(Borrow).where(Borrow.id == borrow_id))
     return result.scalars().first()
 
-async def get_borrow_by_reader(db: AsyncSession, reader_id: str) -> Optional[Borrow]:
+async def get_borrows_by_reader(db: AsyncSession, reader_id: str) -> List[Borrow]:
     result = await db.execute(select(Borrow).where(Borrow.reader_id == reader_id))
-    return result.scalars().first()
+    return result.scalars().all()
 
-async def get_borrow_by_book(db: AsyncSession, book_id: str) -> Optional[Borrow]:
+async def get_borrows_by_book(db: AsyncSession, book_id: str) -> List[Borrow]:
     result = await db.execute(select(Borrow).where(Borrow.book_id == book_id))
-    return result.scalars().first()
+    return result.scalars().all()
 
 async def update_borrow(db: AsyncSession, borrow_id: str, data: BorrowUpdate) -> Optional[Borrow]:
     result = await db.execute(select(Borrow).where(Borrow.id == borrow_id))
