@@ -18,7 +18,10 @@ async def get_borrows(db: AsyncSession) -> List[Borrow]:
 
 async def get_borrow_by_id(db: AsyncSession, borrow_id: str) -> Optional[BorSchema]:
     result = await db.execute(select(Borrow).where(Borrow.id == borrow_id))
-    return BorSchema.model_validate(result.scalars().first())
+    borrow = result.scalars().first()
+    if not borrow:
+        return None
+    return BorSchema.model_validate(borrow)
 
 async def get_borrows_by_reader(db: AsyncSession, reader_id: str) -> List[BorSchema]:
     result = await db.execute(select(Borrow).where(Borrow.reader_id == reader_id))

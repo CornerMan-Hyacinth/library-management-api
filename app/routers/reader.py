@@ -21,7 +21,7 @@ async def create_reader(reader: ReaderCreate, db: AsyncSession = Depends(get_db)
 @router.get("/")
 async def get_readers(db: AsyncSession = Depends(get_db)):
     readers = await reader_crud.get_readers(db=db)
-    return success_response(message="Readers retrieved", data=readers)
+    return success_response(message="Retrieved readers successfully", data=readers)
 
 @router.get("/{reader_id}")
 async def get_reader(reader_id: str, db: AsyncSession = Depends(get_db)):
@@ -31,7 +31,7 @@ async def get_reader(reader_id: str, db: AsyncSession = Depends(get_db)):
             message="Reader not found", status_code=status.HTTP_404_NOT_FOUND
         )
         
-    return success_response(data=reader, message="Reader found")
+    return success_response(data=reader, message="Retrieved reader successfully")
 
 @router.put("/{reader_id}")
 async def update_reader(
@@ -43,7 +43,7 @@ async def update_reader(
             message="Reader not found", status_code=status.HTTP_404_NOT_FOUND
         )
         
-    return success_response(message="Reader found", data=updated_reader)
+    return success_response(message="Reader updated successfully", data=updated_reader)
 
 @router.delete("/{reader_id}")
 async def delete_reader(reader_id: str, db: AsyncSession = Depends(get_db)):

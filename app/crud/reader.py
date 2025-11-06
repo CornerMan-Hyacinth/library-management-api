@@ -18,11 +18,17 @@ async def get_readers(db: AsyncSession) -> List[ReadSchema]:
 
 async def get_reader_by_id(db: AsyncSession, id: str) -> Optional[ReadSchema]:
     result = await db.execute(select(Reader).where(Reader.id == id))
-    return ReadSchema.model_validate(result.scalars().first())
+    reader = result.scalars().first()
+    if not reader:
+        return None
+    return ReadSchema.model_validate(reader)
 
 async def get_reader_by_email(db: AsyncSession, email: str) -> Optional[ReadSchema]:
     result = await db.execute(select(Reader).where(Reader.email == email))
-    return ReadSchema.model_validate(result.scalars().first())
+    reader = result.scalars().first()
+    if not reader:
+        return None
+    return ReadSchema.model_validate(reader)
 
 async def update_reader(
     db: AsyncSession, id: str, data: ReaderUpdate

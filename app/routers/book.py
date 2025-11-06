@@ -11,7 +11,7 @@ router = APIRouter(prefix="/books", tags=["Books"])
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_book(book: BookCreate, db: AsyncSession = Depends(get_db)):
     existing = await book_crud.get_book_by_title(db=db, title=book.title)
-    if existing:
+    if existing != None:
         return error_response(
             message="Book with this title already exists",
             status_code=status.HTTP_409_CONFLICT
@@ -19,8 +19,7 @@ async def create_book(book: BookCreate, db: AsyncSession = Depends(get_db)):
     
     new_book = await book_crud.create_book(db=db, book=book)
     return success_response(
-        message="Book added successfully",
-        data=new_book
+        message="Book added successfully", data=new_book
     )
 
 @router.get("/")

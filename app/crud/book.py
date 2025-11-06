@@ -18,11 +18,19 @@ async def get_books(db: AsyncSession) -> List[BookSchema]:
 
 async def get_book_by_id(db: AsyncSession, id: str) -> Optional[BookSchema]:
     result = await db.execute(select(Book).where(Book.id == id))
-    return BookSchema.model_validate(result.scalars().first())
+    book = result.scalars().first()
+    if not book:
+        return None
+    
+    return BookSchema.model_validate(book)
 
 async def get_book_by_title(db: AsyncSession, title: str) -> Optional[BookSchema]:
     result = await db.execute(select(Book).where(Book.title == title))
-    return BookSchema.model_validate(result.scalars().first())
+    book = result.scalars().first()
+    if not book:
+        return None
+    
+    return BookSchema.model_validate(book)
 
 async def get_books_by_category(db: AsyncSession, cat_id: str) -> List[BookSchema]:
     results = await db.execute(select(Book).where(Book.category_id == cat_id))

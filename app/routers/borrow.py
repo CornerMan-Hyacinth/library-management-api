@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..crud import borrow as borrow_crud, book as book_crud
+from ..crud import borrow as borrow_crud, book as book_crud, reader as reader_crud
 from ..database import get_db
 from ..schemas import Borrow, BorrowCreate, BorrowUpdate
 from ..utils.response import success_response, error_response
@@ -10,11 +10,22 @@ router = APIRouter(prefix="/borrows", tags=["Borrows"])
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_borrow(borrow: BorrowCreate, db: AsyncSession = Depends(get_db)):
     book = await book_crud.get_book_by_id(db=db, id=borrow.book_id)
+    reader = await reader_crud.get_reader_by_id(db=db, id=borrow.reader_id)
     borrows = await borrow_crud.get_borrows_by_book(db=db, book_id=borrow.book_id)
     
-    if borrows >= book.quantity:
+    if not book:
         return error_response(
-            message=f"All copies of {book.title} has been borrowed",
+            message="Book does not exist", status_code=status.HTTP_404_NOT_FOUND
+        )
+        
+    if not reader:
+        return error_response(
+            message="Reader does not exist", status_code=status.HTTP_404_NOT_FOUND
+        )
+            
+    if len(borrows) >= book.quantity:
+        return error_response(
+            message=f"All copies of {book.title} have been borrowed",
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT
         )
         
@@ -58,7 +69,7 @@ async def update_borrow(
         message="Updated borrowed data successfully", data=updated_borrow
     )
 
-@router.delete("/")
+@router.delete("/{borrow_id}")
 async def delete_borrow(borrow_id: str, db: AsyncSession = Depends(get_db)):
     is_deleted = await borrow_crud.delete_borrow(db=db, borrow_id=borrow_id)
     if not is_deleted:
