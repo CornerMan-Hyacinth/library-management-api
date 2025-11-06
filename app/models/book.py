@@ -1,6 +1,6 @@
 from __future__ import annotations
 from uuid import uuid4
-from sqlalchemy import String, ForeignKey, Integer
+from sqlalchemy import String, ForeignKey, Integer, event
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from typing import List
 ## from sqlalchemy.dialects.postgresql import UUID ## for production postgresql
@@ -14,5 +14,12 @@ class Book(Base):
     description: Mapped[str | None] = mapped_column(String, nullable=True)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     category_id: Mapped[str] = mapped_column(String, ForeignKey("categories.id"), nullable=False)
+    available_copies: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     category: Mapped["Category"] = relationship("Category", back_populates="books") # type: ignore
     borrows: Mapped[List["Borrow"]] = relationship("Borrow", back_populates="book") # type: ignore
+
+# --- Event listener ---
+@event.listens_for(Book, "before_insert")
+def set_available_copies(mapper, connection, target):
+    if target.available_copies is None:
+        target.available_copies = target.quantity

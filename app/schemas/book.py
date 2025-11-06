@@ -7,6 +7,7 @@ class BookBase(BaseModel):
     author: str
     description: Optional[str] = None
     quantity: int
+    available_copies: Optional[int] = None
     category_id: str
     
 class Book(BookBase):
@@ -21,5 +22,6 @@ class BookUpdate(BaseModel):
     author: Optional[str] = None
     description: Optional[str] = None
     quantity: Optional[int] = None
+    available_copies: Optional[int] = None
     category_id: Optional[str] = None
     
