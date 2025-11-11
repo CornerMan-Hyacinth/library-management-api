@@ -2,6 +2,7 @@ from app.database import Base
 from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from uuid import uuid4
+from typing import List
 
 class User(Base):
     __tablename__ = "users"
