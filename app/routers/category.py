@@ -1,14 +1,15 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
-from ..schemas import Category, CategoryCreate, CategoryUpdate, ResponseModel
-from ..crud import category as cat_crud
-from ..database import get_db
-from ..utils.response import success_response, error_response
+from app.schemas import Category, CategoryCreate, CategoryUpdate, ResponseModel
+from app.crud import category as cat_crud
+from app.database import get_db
+from app.utils.response import success_response, error_response
+from app.utils.core.auth import get_current_staff
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
 
-@router.post("/", response_model=ResponseModel[Category])
+@router.post("/", dependencies=[Depends(get_current_staff)], response_model=ResponseModel[Category])
 async def create_category(category: CategoryCreate, db: AsyncSession = Depends(get_db)):
     exists = await cat_crud.get_category_by_name(db=db, category=category.name)
     if exists:
@@ -48,7 +49,7 @@ async def get_category_by_name(category_name: str, db: AsyncSession = Depends(ge
         
     return success_response(message="Category found", data=category)
 
-@router.put("/{category_id}", response_model=ResponseModel[Category])
+@router.put("/{category_id}", dependencies=[Depends(get_current_staff)], response_model=ResponseModel[Category])
 async def update_category(
     category_id: str, category: CategoryUpdate, db: AsyncSession = Depends(get_db)
 ):
@@ -63,7 +64,7 @@ async def update_category(
     return success_response(message="Category updated successfully", data=category)
 
 
-@router.delete("/{category_id}", response_model=ResponseModel[None])
+@router.delete("/{category_id}", dependencies=[Depends(get_current_staff)], response_model=ResponseModel[None])
 async def delete_category(category_id: str, db: AsyncSession = Depends(get_db)):
     is_deleted = await cat_crud.delete_category(db=db, category_id=category_id)
     if not is_deleted:

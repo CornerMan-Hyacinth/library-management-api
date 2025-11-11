@@ -1,15 +1,18 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
-from ..crud import borrow as borrow_crud, book as book_crud, reader as reader_crud
-from ..database import get_db
-from ..schemas import Borrow, BorrowCreate, BorrowUpdate, BookUpdate, ResponseModel
-from ..utils.response import success_response, error_response
+from app.crud import borrow as borrow_crud, book as book_crud, reader as reader_crud
+from app.database import get_db
+from app.schemas import Borrow, BorrowCreate, BorrowUpdate, BookUpdate, ResponseModel
+from app.utils.response import success_response, error_response
+from app.utils.core.auth import get_current_staff
 
-router = APIRouter(prefix="/borrows", tags=["Borrows"])
+router = APIRouter(
+    prefix="/borrows", tags=["Borrows"], dependencies=[Depends(get_current_staff)]
+)
 
 @router.post("/", response_model=ResponseModel[Borrow])
-async def create_borrow(borrow: BorrowCreate, db: AsyncSession = Depends(get_db)):
+async def create_borrowed_book(borrow: BorrowCreate, db: AsyncSession = Depends(get_db)):
     # 1. Validate book exists
     book = await book_crud.get_book_by_id(db=db, id=borrow.book_id)
     if not book:
@@ -46,28 +49,28 @@ async def create_borrow(borrow: BorrowCreate, db: AsyncSession = Depends(get_db)
     )
 
 @router.get("/", response_model=ResponseModel[List[Borrow]])
-async def get_borrows(db: AsyncSession = Depends(get_db)):
+async def get_borrowed_books(db: AsyncSession = Depends(get_db)):
     borrows = await borrow_crud.get_borrows(db=db)
     return success_response(
         message="Retrieved borrowed books successfully", data=borrows
     )
     
 @router.get("/reader/{reader_id}", response_model=ResponseModel[List[Borrow]])
-async def get_borrows_by_reader_id(reader_id: str, db: AsyncSession = Depends(get_db)):
+async def get_borrowed_books_by_reader_id(reader_id: str, db: AsyncSession = Depends(get_db)):
     borrows = await borrow_crud.get_borrows_by_reader(db=db, reader_id=reader_id)
     return success_response(
         message="Retrieved borrowed books by reader id successfully", data=borrows
     )
     
 @router.get("/book/{book_id}", response_model=ResponseModel[List[Borrow]])
-async def get_borrows_by_book_id(book_id: str, db: AsyncSession = Depends(get_db)):
+async def get_borrowed_books_by_book_id(book_id: str, db: AsyncSession = Depends(get_db)):
     borrows = await borrow_crud.get_borrows_by_book(db=db, book_id=book_id)
     return success_response(
         message="Retrieved borrowed books by book id successfully", data=borrows
     )
     
-@router.get("/{borrow_id}")
-async def get_borrow_by_id(borrow_id: str, db: AsyncSession = Depends(get_db)):
+@router.get("/{borrow_id}", response_model=ResponseModel[Borrow])
+async def get_borrowed_book_by_id(borrow_id: str, db: AsyncSession = Depends(get_db)):
     borrow = await borrow_crud.get_borrow_by_id(db=db, borrow_id=borrow_id)
     if not borrow:
         return error_response(
@@ -77,7 +80,7 @@ async def get_borrow_by_id(borrow_id: str, db: AsyncSession = Depends(get_db)):
     return success_response(message="Retrieved borrowed item successfully", data=borrow)
     
 @router.put("/{borrow_id}", response_model=ResponseModel[Borrow])
-async def update_borrow(
+async def update_borrowed_book(
     borrow_id: str, borrow: BorrowUpdate, db: AsyncSession = Depends(get_db)
 ):
     updated_borrow = await borrow_crud.update_borrow(
@@ -93,7 +96,7 @@ async def update_borrow(
     )
 
 @router.delete("/{borrow_id}", response_model=ResponseModel[None])
-async def delete_borrow(borrow_id: str, db: AsyncSession = Depends(get_db)):
+async def return_borrowed_book(borrow_id: str, db: AsyncSession = Depends(get_db)):
     # Get borrow data
     borrow = await borrow_crud.get_borrow_by_id(db=db, borrow_id=borrow_id)
     
