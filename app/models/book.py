@@ -3,11 +3,12 @@ from uuid import uuid4
 from sqlalchemy import String, ForeignKey, Integer, event
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from typing import List
-## from sqlalchemy.dialects.postgresql import UUID ## for production postgresql
-from ..database import Base
+# from sqlalchemy.dialects.postgresql import UUID ## for production postgresql
+from app.database import Base
 
 class Book(Base):
     __tablename__ = "books"
+    
     id: Mapped[str] = mapped_column(String, primary_key=True, index=True, default=lambda: str(uuid4()))
     title: Mapped[str] = mapped_column(String, unique=True, index=True, nullable=False)
     author: Mapped[str] = mapped_column(String, nullable=False)

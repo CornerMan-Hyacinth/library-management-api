@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import TypeVar, Generic, Optional
-from ..enums import ResponseStatus
+from app.enums import ResponseStatus
 
 T = TypeVar("T")
 

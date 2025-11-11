@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from ..models import Borrow
-from ..schemas import Borrow as BorSchema, BorrowCreate, BorrowUpdate
+from app.models import Borrow
+from app.schemas import Borrow as BorSchema, BorrowCreate, BorrowUpdate
 from typing import List, Optional
 
 async def create_borrow(db: AsyncSession, borrow: BorrowCreate) -> BorSchema:
@@ -23,8 +23,8 @@ async def get_borrow_by_id(db: AsyncSession, borrow_id: str) -> Optional[BorSche
         return None
     return BorSchema.model_validate(borrow)
 
-async def get_borrows_by_reader(db: AsyncSession, reader_id: str) -> List[BorSchema]:
-    result = await db.execute(select(Borrow).where(Borrow.reader_id == reader_id))
+async def get_borrows_by_user(db: AsyncSession, user_email: str) -> List[BorSchema]:
+    result = await db.execute(select(Borrow).where(Borrow.user_email == user_email))
     db_borrows = result.scalars().all()
     return [BorSchema.model_validate(borrow) for borrow in db_borrows]
 

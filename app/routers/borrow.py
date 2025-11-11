@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
-from app.crud import borrow as borrow_crud, book as book_crud, reader as reader_crud
+from app.crud import borrow as borrow_crud, book as book_crud, profile as profile_crud
 from app.database import get_db
 from app.schemas import Borrow, BorrowCreate, BorrowUpdate, BookUpdate, ResponseModel
 from app.utils.response import success_response, error_response
@@ -20,11 +20,11 @@ async def create_borrowed_book(borrow: BorrowCreate, db: AsyncSession = Depends(
             message="Book does not exist", status_code=status.HTTP_404_NOT_FOUND
         )
        
-    # 2. Validate reader exists
-    reader = await reader_crud.get_reader_by_id(db=db, id=borrow.reader_id) 
-    if not reader:
+    # 2. Validate user exists
+    user = await profile_crud.get_profile_by_email(db=db, email=borrow.user_email) 
+    if not user:
         return error_response(
-            message="Reader does not exist", status_code=status.HTTP_404_NOT_FOUND
+            message="User does not exist", status_code=status.HTTP_404_NOT_FOUND
         )
            
     # 3. Check availability
@@ -55,11 +55,13 @@ async def get_borrowed_books(db: AsyncSession = Depends(get_db)):
         message="Retrieved borrowed books successfully", data=borrows
     )
     
-@router.get("/reader/{reader_id}", response_model=ResponseModel[List[Borrow]])
-async def get_borrowed_books_by_reader_id(reader_id: str, db: AsyncSession = Depends(get_db)):
-    borrows = await borrow_crud.get_borrows_by_reader(db=db, reader_id=reader_id)
+@router.get("/user/{user_email}", response_model=ResponseModel[List[Borrow]])
+async def get_borrowed_books_by_user_email(
+    user_email: str, db: AsyncSession = Depends(get_db)
+):
+    borrows = await borrow_crud.get_borrows_by_user(db=db, user_email=user_email)
     return success_response(
-        message="Retrieved borrowed books by reader id successfully", data=borrows
+        message="Retrieved borrowed books by user id successfully", data=borrows
     )
     
 @router.get("/book/{book_id}", response_model=ResponseModel[List[Borrow]])

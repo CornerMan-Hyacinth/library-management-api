@@ -1,8 +1,8 @@
 from sqlalchemy import func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from ..models.category import Category
-from ..schemas.category import Category as CatSchema, CategoryCreate, CategoryUpdate
+from app.models.category import Category
+from app.schemas.category import Category as CatSchema, CategoryCreate, CategoryUpdate
 from typing import List, Optional
 
 async def create_category(db: AsyncSession, category: CategoryCreate) -> CatSchema:

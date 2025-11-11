@@ -1,5 +1,5 @@
 from .book import Book
 from .borrow import Borrow
 from .category import Category
-from .reader import Reader
+from .profile import Profile
 from .user import User

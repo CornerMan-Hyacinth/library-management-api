@@ -5,7 +5,7 @@ from app.schemas import Book, BookCreate, BookUpdate, ResponseModel
 from app.crud import book as book_crud, category as cat_crud
 from app.database import get_db
 from app.utils.response import success_response, error_response
-from app.utils.core.auth import get_current_staff, get_current_user
+from app.utils.core.auth import get_current_staff
 
 router = APIRouter(prefix="/books", tags=["Books"])
 

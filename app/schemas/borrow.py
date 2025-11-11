@@ -1,9 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional
-from uuid import UUID
 
 class BorrowBase(BaseModel):
-    reader_id: str
+    user_email: EmailStr
     book_id: str
     
 class Borrow(BorrowBase):
@@ -14,5 +13,5 @@ class BorrowCreate(BorrowBase):
     pass
     
 class BorrowUpdate(BaseModel):
-    reader_id: Optional[str] = None
+    user_email: Optional[EmailStr] = None
     book_id: Optional[str] = None
