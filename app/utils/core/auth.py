@@ -26,13 +26,13 @@ async def get_user_by_username(db: AsyncSession, username: str):
     return user
 
 async def get_user_by_email(db: AsyncSession, email: str):
-    result = await db.execute(select(User.email == email))
+    result = await db.execute(select(User).where(User.email == email))
     user = result.scalars().first()
     if not user:
         return None
     return user
 
-async def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     to_encode.update({"exp": expire})
@@ -47,7 +47,7 @@ async def get_current_user(
         detail="Could not validate credentials"
     )
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception

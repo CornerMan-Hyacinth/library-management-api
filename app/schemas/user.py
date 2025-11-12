@@ -1,11 +1,11 @@
 from app.enums import Gender
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import Optional
 from uuid import UUID
     
 class User(BaseModel):
     id: str
-    email: EmailStr
+    email: str
     password: str
     username: str
     is_staff: bool
@@ -14,7 +14,7 @@ class User(BaseModel):
     model_config = {"from_attributes": True}
         
 class UserCreate(BaseModel):
-    email: EmailStr
+    email: str
     password: str
     username: str
     gender: Gender

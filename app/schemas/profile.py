@@ -1,9 +1,9 @@
 from app.enums import Gender
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import Optional
     
 class ProfileBase(BaseModel):
-    email: EmailStr
+    email: str
     username: str
     gender: Gender
     phone_number: Optional[str] = None
@@ -15,7 +15,7 @@ class Profile(ProfileBase):
     model_config = {"from_attributes": True}
         
 class ProfileCreate(ProfileBase):
-    pass
+    user_id: str
 
 class ProfileUpdate(BaseModel):
     email: Optional[str] = None

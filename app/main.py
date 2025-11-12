@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from .database import Base, engine
 from .schemas.response import ResponseModel
-from .routers import book, borrow, category, reader
+from .routers import book, borrow, category, auth, profile
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -24,10 +24,15 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+@app.get("/")
+def home_url():
+    return {"hello": "world"}
+
+app.include_router(auth.router)
+app.include_router(profile.router)
+app.include_router(category.router)
 app.include_router(book.router)
 app.include_router(borrow.router)
-app.include_router(category.router)
-app.include_router(reader.router)
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
