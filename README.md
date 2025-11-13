@@ -10,8 +10,8 @@ This system allows adding and managing books, readers, and categories, as well a
   - Track availability (available / borrowed)
 - ### 🗂 Categories
   - Create and manage book categories
-- ### 👤 Readers
-  - Register and manage library readers
+- ### 👤 Profiles
+  - Register and manage library staff and readers
 - ### 🔄 Borrowing System
   - Record book borrow and return actions
   - Automatically mark books as unavailable when borrowed
@@ -77,6 +77,22 @@ Server will be running at:
 - Swagger UI → [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 ## 🔍 API Endpoints Overview
+
+### Auth
+
+| Method | Endpoint    | Description     |
+| :----- | :---------- | :-------------- |
+| `POST` | `/register` | Register a user |
+| `POST` | `/login`    | Logs in a user  |
+
+### Profiles
+
+| Method   | Endpoint         | Description         |
+| :------- | :--------------- | :------------------ |
+| `GET`    | `/profiles`      | List all profiles   |
+| `GET`    | `/profiles/{id}` | Get profile details |
+| `PUT`    | `/profiles/{id}` | Update a profile    |
+| `DELETE` | `/profiles/{id}` | Delete a profile    |
 
 ### Books
 
