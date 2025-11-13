@@ -128,7 +128,6 @@ Server will be running at:
 
 ## 🧠 Future Improvements
 
-- 🔒 Authentication & authorization (JWT)
 - 📅 Borrowing due dates and reminders
 - 📊 Admin dashboard with analytics
 
